@@ -1,11 +1,9 @@
 ﻿using System;
+using System.Net.Http;
+using JokeGenerator.names;
+using JokeGenerator.jokes;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
-using JokeGenerator;
-using Newtonsoft.Json;
 
 namespace ConsoleApp1
 {
@@ -22,6 +20,7 @@ namespace ConsoleApp1
             string category = null;
 
             INameGen nameGenerator = new NamesPrivservNameGen(new HttpClient());
+            IJokeGen jokeGen = new ChuckNorrisJokeGen(new HttpClient());
 
             while (true)
             {
@@ -46,14 +45,10 @@ namespace ConsoleApp1
                 GetEnteredKey(Console.ReadKey());
                 Console.WriteLine();
 
-                if (key == 'y')
+                if (key == 'y' && PrintCategories(jokeGen))
                 {
-                    Console.WriteLine("Loading available categories... (be patient)");
-                    GetCategories();
-
                     Console.WriteLine("Enter a category, then press Enter");
                     category = Console.ReadLine();
-
                 }
 
                 Console.WriteLine("How many jokes do you want? (1-9), then press Enter");
@@ -83,10 +78,18 @@ namespace ConsoleApp1
 
         }
 
-        private static void GetCategories()
+        private static bool PrintCategories(IJokeGen jokeGen)
         {
-            JsonFeed jsonFeed = new JsonFeed("https://api.chucknorris.io/jokes/categories");
-            Console.WriteLine(string.Join(",", jsonFeed.GetCategories()));
+            var result = jokeGen.GetCategoriesAsync().Result;
+            if (!result.Any())
+            {
+                Console.WriteLine("Categories did not return any values, the service is downgraded, but you might still be able to generate jokes.");
+                return false;
+            }
+            else
+                Console.WriteLine(string.Join(", ", result));
+
+            return true;
         }
 
 

@@ -5,7 +5,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace JokeGenerator
+namespace JokeGenerator.names
 {
     /// <summary>
     /// NamesPrivserv Name Generator implementation. see https://www.names.privserv.com/ to know more about the service
@@ -16,13 +16,17 @@ namespace JokeGenerator
         private readonly string _baseUrl = "https://www.names.privserv.com";
         private readonly HttpClient _httpClient;
 
+
         public NamesPrivservNameGen(HttpClient httpClient)
         {
             this._httpClient = httpClient;
             this._httpClient.BaseAddress = new Uri(_baseUrl);
         }
-
-
+        
+        /// <summary>
+        /// Uses names.priserv.com api to generate a random name.
+        /// </summary>
+        /// <returns>A random name</returns>
         public async Task<Tuple<string, string>> GetRandomNameAsync()
         {
 
@@ -31,7 +35,7 @@ namespace JokeGenerator
                 string result = await _httpClient.GetStringAsync("api");
                 dynamic dynamicJson = JsonConvert.DeserializeObject<dynamic>(result);
                 return  Tuple.Create(dynamicJson.name.ToString(), dynamicJson.surname.ToString());
-            } catch (Exception ex)
+            } catch (HttpRequestException ex)
             {
                 Console.WriteLine(ex);
                 return null;
