@@ -28,7 +28,6 @@ namespace ConsoleApp1
                     if (key == 'c')
                     {
                         getCategories();
-                        PrintResults();
                     }
                     if (key == 'r')
                     {
@@ -115,8 +114,8 @@ namespace ConsoleApp1
 
         private static void getCategories()
         {
-            new JsonFeed("https://api.chucknorris.io", 0);
-            results = JsonFeed.GetCategories();
+            new JsonFeed("https://api.chucknorris.io/jokes/categories", 0);
+            Console.WriteLine(string.Join(",", JsonFeed.GetCategories()));
         }
 
         private static void GetNames()
