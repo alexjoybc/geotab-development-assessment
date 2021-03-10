@@ -18,6 +18,7 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 
 ### Fixed
 
+- fix code smell, massive switch statement replaced with builtin c#
 - fix bug return only 1 joke
 - fix bug with assigning joke category
 - fix bug retrieving categories
