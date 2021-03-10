@@ -31,23 +31,32 @@ namespace ConsoleApp1
                     }
                     if (key == 'r')
                     {
+                        
                         printer.Value("Want to use a random name? y/n").ToString();
                         GetEnteredKey(Console.ReadKey());
+                        
                         if (key == 'y')
                             GetNames();
+
                         printer.Value("Want to specify a category? y/n").ToString();
+                        GetEnteredKey(Console.ReadKey());
+
                         if (key == 'y')
                         {
                             printer.Value("How many jokes do you want? (1-9)").ToString();
                             int n = Int32.Parse(Console.ReadLine());
+
                             printer.Value("Enter a category;").ToString();
                             GetRandomJokes(Console.ReadLine(), n);
+                            
                             PrintResults();
                         }
                         else
                         {
+                            
                             printer.Value("How many jokes do you want? (1-9)").ToString();
                             int n = Int32.Parse(Console.ReadLine());
+                            
                             GetRandomJokes(null, n);
                             PrintResults();
                         }
