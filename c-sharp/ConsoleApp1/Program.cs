@@ -16,43 +16,45 @@ namespace ConsoleApp1
 
         static void Main(string[] args)
         {
-            Console.WriteLine("Press ? to get instructions.");
-            if (Console.ReadLine() == "?")
+
+            PrintBanner();
+
+            string category = null;
+
+            while (true)
             {
-                string category = null;
 
-                while (true)
+                Console.WriteLine("Press any key to get random jokes");
+                Console.ReadKey();
+                Console.SetCursorPosition(0, Console.CursorTop);
+
+                Console.WriteLine("Want to use a random name? y/n");
+                GetEnteredKey(Console.ReadKey());
+                Console.WriteLine();
+
+                if (key == 'y')
+                    GetNames();
+
+                Console.WriteLine("Want to specify a category? y/n");
+                GetEnteredKey(Console.ReadKey());
+                Console.WriteLine();
+
+                if (key == 'y')
                 {
+                    Console.WriteLine("Loading available categories... (be patient)");
+                    GetCategories();
 
-                    Console.WriteLine("Press any key to get random jokes");
-                    Console.ReadKey();
+                    Console.WriteLine("Enter a category, then press Enter");
+                    category = Console.ReadLine();
 
-                    Console.WriteLine("Want to use a random name? y/n");
-                    GetEnteredKey(Console.ReadKey());
-
-                    if (key == 'y')
-                        GetNames();
-
-                    Console.WriteLine("Want to specify a category? y/n");
-                    GetEnteredKey(Console.ReadKey());
-
-                    if (key == 'y')
-                    {
-                        Console.WriteLine("Loading available categories... (be patient)");
-                        GetCategories();
-
-                        Console.WriteLine("Enter a category, then press Enter");
-                        category = Console.ReadLine();
-
-                    }
-
-                    Console.WriteLine("How many jokes do you want? (1-9), then press Enter");
-                    int n = Int32.Parse(Console.ReadLine());
-                    GetRandomJokes(category, n);
-
-                    category = null;
-                    names = null;
                 }
+
+                Console.WriteLine("How many jokes do you want? (1-9), then press Enter");
+                int n = Int32.Parse(Console.ReadLine());
+                GetRandomJokes(category, n);
+
+                category = null;
+                names = null;
             }
 
         }
@@ -86,5 +88,29 @@ namespace ConsoleApp1
             dynamic result = jsonFeed.Getnames();
             names = Tuple.Create(result.name.ToString(), result.surname.ToString());
         }
+
+
+        private static void PrintBanner()
+        {
+
+            var arr = new[]
+            {
+                      @"    /$$$$$$                         /$$$$$           /$$                            ",
+                      @"   /$$__  $$                       |__  $$          | $$                            ",
+                      @"  | $$  \__/  /$$$$$$   /$$$$$$       | $$  /$$$$$$ | $$   /$$  /$$$$$$   /$$$$$$$  ",
+                      @"  | $$ /$$$$ /$$__  $$ /$$__  $$      | $$ /$$__  $$| $$  /$$/ /$$__  $$ /$$_____/  ",
+                      @"  | $$|_  $$| $$$$$$$$| $$  \ $$ /$$  | $$| $$  \ $$| $$$$$$/ | $$$$$$$$|  $$$$$$   ",
+                      @"  | $$  \ $$| $$_____/| $$  | $$| $$  | $$| $$  | $$| $$_  $$ | $$_____/ \____  $$  ",
+                      @"  |  $$$$$$/|  $$$$$$$|  $$$$$$/|  $$$$$$/|  $$$$$$/| $$ \  $$|  $$$$$$$ /$$$$$$$/  ",
+                      @"   \______/  \_______/ \______/  \______/  \______/ |__/  \__/ \_______/|_______/   "
+            };                                                                                              
+
+            Console.WriteLine("\n");
+            foreach (string line in arr)
+                Console.WriteLine(line);
+            Console.WriteLine("\n");
+
+        }
+
     }
 }
