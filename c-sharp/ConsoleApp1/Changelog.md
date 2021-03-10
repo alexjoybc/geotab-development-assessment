@@ -12,6 +12,10 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 
 ---
 
+### Added
+
+- Abstraction: supports new INameGenerator, for implementing new random name generator
+
 ### Changed
 
 - Improved instructions to start the program.

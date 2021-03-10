@@ -4,15 +4,15 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using JokeGenerator;
 using Newtonsoft.Json;
 
 namespace ConsoleApp1
 {
     class Program
     {
-        static string[] results = new string[50];
+
         static char key;
-        static Tuple<string, string> names;
 
         static void Main(string[] args)
         {
@@ -21,8 +21,12 @@ namespace ConsoleApp1
 
             string category = null;
 
+            INameGen nameGenerator = new NamesPrivservNameGen(new HttpClient());
+
             while (true)
             {
+
+                Tuple<string, string> randomNames = null;
 
                 Console.WriteLine("Press any key to get random jokes");
                 Console.ReadKey();
@@ -33,7 +37,10 @@ namespace ConsoleApp1
                 Console.WriteLine();
 
                 if (key == 'y')
-                    GetNames();
+                {
+                    Console.WriteLine("Loading random name...");
+                    randomNames = nameGenerator.GetRandomNameAsync().Result;
+                }
 
                 Console.WriteLine("Want to specify a category? y/n");
                 GetEnteredKey(Console.ReadKey());
@@ -51,10 +58,10 @@ namespace ConsoleApp1
 
                 Console.WriteLine("How many jokes do you want? (1-9), then press Enter");
                 int n = Int32.Parse(Console.ReadLine());
-                GetRandomJokes(category, n);
+                GetRandomJokes(category, n, randomNames);
 
                 category = null;
-                names = null;
+
             }
 
         }
@@ -64,7 +71,7 @@ namespace ConsoleApp1
             key = consoleKeyInfo.KeyChar;
         }
 
-        private static void GetRandomJokes(string category, int number)
+        private static void GetRandomJokes(string category, int number, Tuple<String, String> names)
         {
 
             JsonFeed jsonFeed = new JsonFeed("https://api.chucknorris.io");
@@ -80,13 +87,6 @@ namespace ConsoleApp1
         {
             JsonFeed jsonFeed = new JsonFeed("https://api.chucknorris.io/jokes/categories");
             Console.WriteLine(string.Join(",", jsonFeed.GetCategories()));
-        }
-
-        private static void GetNames()
-        {
-            JsonFeed jsonFeed = new JsonFeed("https://www.names.privserv.com/api/");
-            dynamic result = jsonFeed.Getnames();
-            names = Tuple.Create(result.name.ToString(), result.surname.ToString());
         }
 
 
