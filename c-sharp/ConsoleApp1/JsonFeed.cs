@@ -8,17 +8,16 @@ using Newtonsoft.Json;
 
 namespace ConsoleApp1
 {
-    class JsonFeed
+    public class JsonFeed
     {
-        static string _url = "";
+        private readonly string _url = "";
 
-        public JsonFeed() { }
-        public JsonFeed(string endpoint, int results)
+        public JsonFeed(string endpoint)
         {
             _url = endpoint;
         }
         
-		public static string[] GetRandomJokes(string firstname, string lastname, string category)
+		public string GetRandomJokes(string firstname, string lastname, string category)
 		{
 			HttpClient client = new HttpClient();
 			client.BaseAddress = new Uri(_url);
@@ -42,7 +41,7 @@ namespace ConsoleApp1
                 joke = firstPart + " " + firstname + " " + lastname + secondPart;
             }
 
-            return new string[] { JsonConvert.DeserializeObject<dynamic>(joke).value };
+            return JsonConvert.DeserializeObject<dynamic>(joke).value;
         }
 
         /// <summary>
@@ -50,7 +49,7 @@ namespace ConsoleApp1
         /// </summary>
         /// <param name="client2"></param>
         /// <returns></returns>
-		public static dynamic Getnames()
+		public dynamic Getnames()
 		{
 			HttpClient client = new HttpClient();
 			client.BaseAddress = new Uri(_url);
@@ -58,7 +57,7 @@ namespace ConsoleApp1
 			return JsonConvert.DeserializeObject<dynamic>(result);
 		}
 
-		public static string[] GetCategories()
+		public string[] GetCategories()
 		{
 			HttpClient client = new HttpClient();
 			client.BaseAddress = new Uri(_url);

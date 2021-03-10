@@ -12,8 +12,13 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 
 ---
 
+### Changed
+
+- changed jsonFeed to not be static
+
 ### Fixed
 
-- fix issue with assigning joke category
-- fix issue retrieving categories
+- fix bug return only 1 joke
+- fix bug with assigning joke category
+- fix bug retrieving categories
 

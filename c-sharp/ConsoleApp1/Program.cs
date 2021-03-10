@@ -27,7 +27,7 @@ namespace ConsoleApp1
                     GetEnteredKey(Console.ReadKey());
                     if (key == 'c')
                     {
-                        getCategories();
+                        GetCategories();
                     }
                     if (key == 'r')
                     {
@@ -48,8 +48,6 @@ namespace ConsoleApp1
 
                             printer.Value("Enter a category;").ToString();
                             GetRandomJokes(Console.ReadLine(), n);
-                            
-                            PrintResults();
                         }
                         else
                         {
@@ -58,18 +56,13 @@ namespace ConsoleApp1
                             int n = Int32.Parse(Console.ReadLine());
                             
                             GetRandomJokes(null, n);
-                            PrintResults();
+
                         }
                     }
                     names = null;
                 }
             }
 
-        }
-
-        private static void PrintResults()
-        {
-            printer.Value("[" + string.Join(",", results) + "]").ToString();
         }
 
         private static void GetEnteredKey(ConsoleKeyInfo consoleKeyInfo)
@@ -117,20 +110,26 @@ namespace ConsoleApp1
 
         private static void GetRandomJokes(string category, int number)
         {
-            new JsonFeed("https://api.chucknorris.io", number);
-            results = JsonFeed.GetRandomJokes(names?.Item1, names?.Item2, category);
+
+            JsonFeed jsonFeed = new JsonFeed("https://api.chucknorris.io");
+
+            for (int i = 0; i < number; i++)
+            {
+                Console.WriteLine(jsonFeed.GetRandomJokes(names?.Item1, names?.Item2, category));
+            }
+
         }
 
-        private static void getCategories()
+        private static void GetCategories()
         {
-            new JsonFeed("https://api.chucknorris.io/jokes/categories", 0);
-            Console.WriteLine(string.Join(",", JsonFeed.GetCategories()));
+            JsonFeed jsonFeed = new JsonFeed("https://api.chucknorris.io/jokes/categories");
+            Console.WriteLine(string.Join(",", jsonFeed.GetCategories()));
         }
 
         private static void GetNames()
         {
-            new JsonFeed("https://www.names.privserv.com/api/", 0);
-            dynamic result = JsonFeed.Getnames();
+            JsonFeed jsonFeed = new JsonFeed("https://www.names.privserv.com/api/");
+            dynamic result = jsonFeed.Getnames();
             names = Tuple.Create(result.name.ToString(), result.surname.ToString());
         }
     }
