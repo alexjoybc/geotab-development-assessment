@@ -56,7 +56,7 @@ namespace ConsoleApp1
                     }
                 }
 
-                GetRandomJokes(category, n, randomNames);
+                GetRandomJokes(jokeGen, category, n, randomNames);
 
             }
 
@@ -97,16 +97,14 @@ namespace ConsoleApp1
         }
 
 
-        private static void GetRandomJokes(string category, int number, Tuple<String, String> names)
+        private static void GetRandomJokes(IJokeGen jokeGen, string category, int number, Tuple<String, String> names)
         {
             // To prevent DDOS attacks on joke service ;-)
             if (number > 9) number = 9;
 
-            JsonFeed jsonFeed = new JsonFeed("https://api.chucknorris.io");
-
             for (int i = 0; i < number; i++)
             {
-                Console.WriteLine(jsonFeed.GetRandomJokes(names?.Item1, names?.Item2, category));
+                Console.WriteLine(jokeGen.GetRandomJokeAsync(names?.Item1, names?.Item2, category).Result);
             }
 
         }

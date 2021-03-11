@@ -17,5 +17,14 @@ namespace JokeGenerator.jokes
         /// <returns>A List of string</returns>
         Task<IEnumerable<String>> GetCategoriesAsync();
 
+        /// <summary>
+        /// Returns a random joke, if firstname and lastname is provided, the main character must be switched, an optional filter category can be provided
+        /// </summary>
+        /// <param name="firstname">A character firstName</param>
+        /// <param name="lastname">A character lastName</param>
+        /// <param name="category">A category</param>
+        /// <returns></returns>
+        Task<string> GetRandomJokeAsync(string firstname, string lastname, string category);
+
     }
 }
