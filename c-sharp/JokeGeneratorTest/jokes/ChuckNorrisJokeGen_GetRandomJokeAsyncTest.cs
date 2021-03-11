@@ -22,10 +22,17 @@ namespace JokeGeneratorTest.jokes
 
         private ChuckNorrisJokeGen sut;
 
-        [DataRow("{\"value\":\"Chuck Norris trims his fingernails with a chainsaw.\"}", null, null, null, "Chuck Norris trims his fingernails with a chainsaw.")]
-        [DataRow("{\"value\":\"Chuck Norris trims his fingernails with a chainsaw.\"}", "Bob", "Ross", null, "Bob Ross trims his fingernails with a chainsaw.")]
+        [DataRow("{\"value\":\"Chuck Norris trims his fingernails with a chainsaw.\"}", null, null, "Chuck Norris trims his fingernails with a chainsaw.")]
+        [DataRow("{\"value\":\"Chuck Norris trims his fingernails with a chainsaw.\"}", "Bob", "Ross", "Bob Ross trims his fingernails with a chainsaw.")]
+        [DataRow("{\"value\":\"Chuck Norris trims his fingernails with a chainsaw.\"}", "Bob", "Ross", "Bob Ross trims his fingernails with a chainsaw.")]
+        [DataRow("{\"value\":\"Chuck Norris trims his fingernails with a chainsaw. says Chuck Norris\"}", "Bob", "Ross", "Bob Ross trims his fingernails with a chainsaw. says Bob Ross")]
+        [DataRow("{\"value\":\"Chuck Norris trims his fingernails with a chainsaw. says Chuck\"}", "Bob", "Ross", "Bob Ross trims his fingernails with a chainsaw. says Bob")]
+        [DataRow("{\"value\":\"CHUCK Norris trims his fingernails with a chainsaw. says Chuck\"}", "Bob", "Ross", "Bob Ross trims his fingernails with a chainsaw. says Bob")]
+        [DataRow("{\"value\":\"CHUCKchuckChUcK Norris trims his fingernails with a chainsaw. says Chuck\"}", "Bob", "Ross", "BobBobBob Ross trims his fingernails with a chainsaw. says Bob")]
+        [DataRow("{\"value\":\"NORRIS trims his fingernails with a chainsaw. says Chuck\"}", "Bob", "Ross", "Ross trims his fingernails with a chainsaw. says Bob")]
+        [DataRow("{\"value\":\"unknown trims his fingernails with a chainsaw.\"}", "Bob", "Ross", "unknown trims his fingernails with a chainsaw.")]
         [DataTestMethod]
-        public void positiveTests(string joke, string firstName, string lastName, string category, string expected)
+        public void testSwappNameJokeGenerator(string joke, string firstName, string lastName, string expected)
         {
             var handlerMock = new Mock<HttpMessageHandler>(MockBehavior.Strict);
             handlerMock
@@ -48,7 +55,7 @@ namespace JokeGeneratorTest.jokes
 
             sut = new ChuckNorrisJokeGen(httpClient);
 
-            var actual = sut.GetRandomJokeAsync(firstName, lastName, category).Result;
+            var actual = sut.GetRandomJokeAsync(firstName, lastName, null).Result;
 
             Assert.AreEqual(expected, actual);
 

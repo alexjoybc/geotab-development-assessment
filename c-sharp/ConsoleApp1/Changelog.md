@@ -14,7 +14,8 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 
 ### Added
 
-- Abstraction: supports new INameGenerator, for implementing new random name generator
+- Abstraction: supports new INameGen, for implementing random name generators.
+- Abstraction: supports new IJokeGen, for implementing joke generators.
 
 ### Changed
 
@@ -25,6 +26,8 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 
 ### Fixed
 
+- fix issue with replace multiple main characters
+- fix integer conversion for number of jokes
 - fix code smell, 3 nested statements down to 2 levels.
 - fix code smell, nested statements 6 levels down to 3 levels.
 - fix code smell, massive switch statement replaced with builtin c#

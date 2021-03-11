@@ -13,6 +13,8 @@ namespace JokeGenerator.jokes
     {
 
         private const string _baseUrl = "https://api.chucknorris.io";
+        private const string _chuck = "chuck";
+        private const string _norris = "norris";
 
         private readonly HttpClient _httpClient;
 
@@ -62,13 +64,17 @@ namespace JokeGenerator.jokes
 
             if (firstname != null && lastname != null)
             {
-                int index = joke.IndexOf("Chuck Norris");
-                string firstPart = joke.Substring(0, index);
-                string secondPart = joke.Substring(0 + index + "Chuck Norris".Length, joke.Length - (index + "Chuck Norris".Length));
-                joke = firstPart.Trim() + " " + firstname + " " + lastname + secondPart;
+                return swapMainCharacter(joke, firstname, lastname);
             }
 
             return joke;
         }
+
+        private string swapMainCharacter(string joke, string firstname, string lastname)
+        {
+            return joke.Replace(_chuck, firstname, StringComparison.OrdinalIgnoreCase).Replace(_norris, lastname, StringComparison.OrdinalIgnoreCase);
+        }
+
+
     }
 }
