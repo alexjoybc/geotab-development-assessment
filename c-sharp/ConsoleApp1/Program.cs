@@ -32,20 +32,14 @@ namespace ConsoleApp1
                 Console.SetCursorPosition(0, Console.CursorTop);
 
                 Console.WriteLine("Want to use a random name? y/n");
-                GetEnteredKey(Console.ReadKey());
-                Console.WriteLine();
-
-                if (key == 'y')
+                if (Console.ReadKey().KeyChar == 'y')
                 {
-                    Console.WriteLine("Loading random name...");
+                    Console.WriteLine("\nLoading random name...");
                     randomNames = nameGenerator.GetRandomNameAsync().Result;
                 }
 
                 Console.WriteLine("Want to specify a category? y/n");
-                GetEnteredKey(Console.ReadKey());
-                Console.WriteLine();
-
-                if (key == 'y' && PrintCategories(jokeGen))
+                if (Console.ReadKey().KeyChar == 'y' && PrintCategories(jokeGen))
                 {
                     Console.WriteLine("Enter a category, then press Enter");
                     category = Console.ReadLine();
@@ -61,9 +55,17 @@ namespace ConsoleApp1
 
         }
 
-        private static void GetEnteredKey(ConsoleKeyInfo consoleKeyInfo)
+        private static Tuple<string, string> getRandomName(INameGen nameGen)
         {
-            key = consoleKeyInfo.KeyChar;
+            var result = nameGen.GetRandomNameAsync().Result;
+
+            if(result == null)
+            {
+                Console.WriteLine($"{nameof(nameGen)} did not return any values, the service is downgraded, but you might still be able to generate jokes with the default name.");
+            }
+
+            return result;
+
         }
 
         private static void GetRandomJokes(string category, int number, Tuple<String, String> names)
@@ -83,11 +85,11 @@ namespace ConsoleApp1
             var result = jokeGen.GetCategoriesAsync().Result;
             if (!result.Any())
             {
-                Console.WriteLine("Categories did not return any values, the service is downgraded, but you might still be able to generate jokes.");
+                Console.WriteLine("\nCategories did not return any values, the service is downgraded, but you might still be able to generate jokes.");
                 return false;
             }
             else
-                Console.WriteLine(string.Join(", ", result));
+                Console.WriteLine($"\n{string.Join(", ", result)}");
 
             return true;
         }
