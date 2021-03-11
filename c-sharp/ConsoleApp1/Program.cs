@@ -35,22 +35,22 @@ namespace ConsoleApp1
                 }
 
                 Console.WriteLine("\nDo you want to specify a category? y/n");
-                if (Console.ReadKey().KeyChar == 'y' && PrintCategories(jokeGen))
+                if (Console.ReadKey().KeyChar == 'y')
                 {
-                    Console.WriteLine("Enter a category name, then press Enter");
-                    category = Console.ReadLine();
+                    category = GetCategories(jokeGen);
                 }
 
                 int n = 0;
                 bool isValid = false;
-                while(!isValid)
+                while (!isValid)
                 {
                     Console.WriteLine("\nHow many jokes do you want? (1-9), then press Enter");
                     string value = Console.ReadLine();
                     if (int.TryParse(value, out n) && n > 0 && n < 10)
                     {
                         isValid = true;
-                    } else
+                    }
+                    else
                     {
                         Console.WriteLine($"{value} is invalid, it should be a number between 1 and 9.");
                     }
@@ -69,10 +69,11 @@ namespace ConsoleApp1
 
             Console.WriteLine("\nLoading random name...");
             var result = nameGen.GetRandomNameAsync().Result;
-            if(result == null)
+            if (result == null)
             {
                 Console.WriteLine($"{nameof(nameGen)} did not return any values, the service is downgraded, but you might still be able to generate jokes with the default name.");
-            } else
+            }
+            else
             {
                 Console.WriteLine($"{result.Item1} {result.Item2} will now be used as the main character of the jokes");
             }
@@ -81,19 +82,31 @@ namespace ConsoleApp1
 
         }
 
-        private static bool PrintCategories(IJokeGen jokeGen)
+        private static string GetCategories(IJokeGen jokeGen)
         {
             Console.WriteLine("\nLoading jokes categories...");
-            var result = jokeGen.GetCategoriesAsync().Result;
-            if (!result.Any())
+            var categories = jokeGen.GetCategoriesAsync().Result;
+            if (!categories.Any())
             {
                 Console.WriteLine("Categories did not return any values, the service is downgraded, but you might still be able to generate jokes.");
-                return false;
+                return null;
             }
             else
-                Console.WriteLine($"{string.Join(", ", result)}");
+                Console.WriteLine($"{string.Join(", ", categories)}");
 
-            return true;
+
+            Console.WriteLine("Enter a category name, then press Enter");
+            var result = Console.ReadLine().ToLower();
+
+            while (!categories.Any(x => x.Equals(result, StringComparison.OrdinalIgnoreCase)))
+            {
+                Console.WriteLine($"{result} does not belong to the list of categories available. please enter a value in the following selection:");
+                Console.WriteLine($"{string.Join(", ", categories)}");
+                result = Console.ReadLine().ToLower();
+            }
+
+            return result;
+
         }
 
 
@@ -122,7 +135,7 @@ namespace ConsoleApp1
                       @"  | $$  \ $$| $$_____/| $$  | $$| $$  | $$| $$  | $$| $$_  $$ | $$_____/ \____  $$  ",
                       @"  |  $$$$$$/|  $$$$$$$|  $$$$$$/|  $$$$$$/|  $$$$$$/| $$ \  $$|  $$$$$$$ /$$$$$$$/  ",
                       @"   \______/  \_______/ \______/  \______/  \______/ |__/  \__/ \_______/|_______/   "
-            };                                                                                              
+            };
 
             Console.WriteLine("\n");
             foreach (string line in arr)
