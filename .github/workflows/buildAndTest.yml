@@ -29,5 +29,6 @@ jobs:
       working-directory: ${{ env.DOTNET_DIR }}
       run: dotnet build --configuration $DOTNET_CONFIG --no-restore
 
-    - name: Test     
+    - name: Test
+      working-directory: ${{ env.DOTNET_DIR }}    
       run: dotnet test --no-restore --no-build --configuration $DOTNET_CONFIG
