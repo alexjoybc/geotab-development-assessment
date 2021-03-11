@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.CSharp.RuntimeBinder;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -13,14 +14,13 @@ namespace JokeGenerator.names
     public class NamesPrivservNameGen : INameGen
     {
 
-        private readonly string _baseUrl = "https://www.names.privserv.com";
+        
         private readonly HttpClient _httpClient;
 
 
         public NamesPrivservNameGen(HttpClient httpClient)
         {
             this._httpClient = httpClient;
-            this._httpClient.BaseAddress = new Uri(_baseUrl);
         }
         
         /// <summary>
@@ -40,6 +40,10 @@ namespace JokeGenerator.names
                 Console.WriteLine($"Error fetching categories from {_httpClient.BaseAddress}: {ex.Message}.");
                 return null;
             } catch (JsonReaderException)
+            {
+                Console.WriteLine($"Error converting response to firstName,lastName tuple.");
+                return null;
+            } catch (RuntimeBinderException)
             {
                 Console.WriteLine($"Error converting response to firstName,lastName tuple.");
                 return null;

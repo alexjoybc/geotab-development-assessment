@@ -16,6 +16,9 @@ namespace JokeGeneratorTest.jokes
     [TestClass]
     public class ChuckNorrisJokeGen_GetCategoriesAsyncTest
     {
+
+        private const string _url = "http://example.com";
+
         private ChuckNorrisJokeGen sut;
 
         [TestMethod]
@@ -39,6 +42,7 @@ namespace JokeGeneratorTest.jokes
                .Verifiable();
 
             var httpClient = new HttpClient(handlerMock.Object);
+            httpClient.BaseAddress = new Uri(_url);
 
             sut = new ChuckNorrisJokeGen(httpClient);
 
@@ -51,7 +55,7 @@ namespace JokeGeneratorTest.jokes
             Assert.AreEqual("c", actual.ElementAt(2));
             Assert.AreEqual("d", actual.ElementAt(3));
 
-            var expectedUri = new Uri("https://api.chucknorris.io/jokes/categories");
+            var expectedUri = new Uri($"{_url}/jokes/categories");
 
             handlerMock.Protected().Verify(
                "SendAsync",
@@ -87,6 +91,7 @@ namespace JokeGeneratorTest.jokes
                .Verifiable();
 
             var httpClient = new HttpClient(handlerMock.Object);
+            httpClient.BaseAddress = new Uri(_url);
 
             sut = new ChuckNorrisJokeGen(httpClient);
 
@@ -94,7 +99,7 @@ namespace JokeGeneratorTest.jokes
 
             Assert.AreEqual(0, actual.Count());
 
-            var expectedUri = new Uri("https://api.chucknorris.io/jokes/categories");
+            var expectedUri = new Uri($"{_url}/jokes/categories");
 
             handlerMock.Protected().Verify(
                "SendAsync",
@@ -129,6 +134,7 @@ namespace JokeGeneratorTest.jokes
                .Verifiable();
 
             var httpClient = new HttpClient(handlerMock.Object);
+            httpClient.BaseAddress = new Uri(_url);
 
             sut = new ChuckNorrisJokeGen(httpClient);
 
@@ -136,7 +142,7 @@ namespace JokeGeneratorTest.jokes
 
             Assert.AreEqual(0, actual.Count());
 
-            var expectedUri = new Uri("https://api.chucknorris.io/jokes/categories");
+            var expectedUri = new Uri($"{_url}/jokes/categories");
 
             handlerMock.Protected().Verify(
                "SendAsync",
@@ -149,6 +155,8 @@ namespace JokeGeneratorTest.jokes
             );
 
         }
+
+
 
 
     }

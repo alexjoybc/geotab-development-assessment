@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.CSharp.RuntimeBinder;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -12,7 +13,7 @@ namespace JokeGenerator.jokes
     public class ChuckNorrisJokeGen : IJokeGen
     {
 
-        private const string _baseUrl = "https://api.chucknorris.io";
+        
         private const string _chuck = "chuck";
         private const string _norris = "norris";
 
@@ -21,7 +22,6 @@ namespace JokeGenerator.jokes
         public ChuckNorrisJokeGen(HttpClient httpClient)
         {
             _httpClient = httpClient;
-            httpClient.BaseAddress = new Uri(_baseUrl);
         }
 
         /// <summary>
@@ -30,37 +30,56 @@ namespace JokeGenerator.jokes
         /// <returns>A List of string</returns>
         public async Task<IEnumerable<string>> GetCategoriesAsync()
         {
+
+            List<string> categories = new List<string>();
+
             try
             {
-                string result = await _httpClient.GetStringAsync("/jokes/categories");
-                return JsonConvert.DeserializeObject<List<string>>(result);
+                var result = await _httpClient.GetStringAsync("/jokes/categories");
+                categories.AddRange(JsonConvert.DeserializeObject<List<string>>(result));
             } catch (HttpRequestException ex)
             {
-                Console.WriteLine($"Error fetching categories from {_baseUrl}: {ex.Message}.");
-                return new List<string>();
+                Console.WriteLine($"Error fetching categories from {_httpClient.BaseAddress}: {ex.Message}.");
             } catch (JsonReaderException)
             {
                 Console.WriteLine($"Error converting response to collections of categories.");
-                return new List<string>();
             }
+
+            return categories;
+
         }
 
         public async Task<string> GetRandomJokeAsync(string firstname, string lastname, string category)
         {
 
             string url = string.IsNullOrWhiteSpace(category) ? "jokes/random" : $"jokes/random?category={category}";
-
-            string reponse = await _httpClient.GetStringAsync(url);
-
-            string joke = JsonConvert.DeserializeObject<dynamic>(reponse).value;
-
-            if (firstname != null && lastname != null)
+            try
             {
-                return swapHero(joke, firstname, lastname);
-            }
+                string reponse = await _httpClient.GetStringAsync(url);
 
-            return joke;
-        }
+                string joke = JsonConvert.DeserializeObject<dynamic>(reponse).value;
+
+                if (firstname != null && lastname != null)
+                {
+                    return swapHero(joke, firstname, lastname);
+                }
+
+                return joke;
+
+            } catch (HttpRequestException ex)
+            {
+                Console.WriteLine($"Error fetching jokes from {_httpClient.BaseAddress}: {ex.Message}.");
+                return null;
+            }
+            catch (JsonReaderException)
+            {
+                Console.WriteLine($"Error converting response to joke.");
+                return null;
+            } catch (RuntimeBinderException) {
+                Console.WriteLine($"Error converting response to firstName,lastName tuple.");
+                return null;
+            }
+}
 
         private string swapHero(string joke, string firstname, string lastname)
         {

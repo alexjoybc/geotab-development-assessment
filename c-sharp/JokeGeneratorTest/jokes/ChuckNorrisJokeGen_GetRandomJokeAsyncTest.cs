@@ -14,11 +14,11 @@ namespace JokeGeneratorTest.jokes
 {
 
 
-
-
     [TestClass]
     public class ChuckNorrisJokeGen_GetRandomJokeAsyncTest
     {
+
+        private const string _url = "http://example.com";
 
         private ChuckNorrisJokeGen sut;
 
@@ -52,6 +52,7 @@ namespace JokeGeneratorTest.jokes
                .Verifiable();
 
             var httpClient = new HttpClient(handlerMock.Object);
+            httpClient.BaseAddress = new Uri(_url);
 
             sut = new ChuckNorrisJokeGen(httpClient);
 
@@ -59,7 +60,7 @@ namespace JokeGeneratorTest.jokes
 
             Assert.AreEqual(expected, actual);
 
-            var expectedUri = new Uri("https://api.chucknorris.io/jokes/random");
+            var expectedUri = new Uri($"{_url}/jokes/random");
 
             handlerMock.Protected().Verify(
                "SendAsync",
@@ -94,6 +95,7 @@ namespace JokeGeneratorTest.jokes
                .Verifiable();
 
             var httpClient = new HttpClient(handlerMock.Object);
+            httpClient.BaseAddress = new Uri(_url);
 
             sut = new ChuckNorrisJokeGen(httpClient);
 
@@ -101,7 +103,51 @@ namespace JokeGeneratorTest.jokes
 
             Assert.AreEqual("Chuck Norris trims his fingernails with a chainsaw.", actual);
 
-            var expectedUri = new Uri("https://api.chucknorris.io/jokes/random?category=animal");
+            var expectedUri = new Uri($"{_url}/jokes/random?category=animal");
+
+            handlerMock.Protected().Verify(
+               "SendAsync",
+               Times.Exactly(1), // we expected a single external request
+               ItExpr.Is<HttpRequestMessage>(req =>
+                  req.Method == HttpMethod.Get  // we expected a GET request
+                  && req.RequestUri == expectedUri // to this uri
+               ),
+               ItExpr.IsAny<CancellationToken>()
+            );
+
+        }
+
+
+        [TestMethod]
+        public void withInvalidJsonShouldReturnNull()
+        {
+            var handlerMock = new Mock<HttpMessageHandler>(MockBehavior.Strict);
+            handlerMock
+               .Protected()
+               // Setup the PROTECTED method to mock
+               .Setup<Task<HttpResponseMessage>>(
+                  "SendAsync",
+                  ItExpr.IsAny<HttpRequestMessage>(),
+                  ItExpr.IsAny<CancellationToken>()
+               )
+               // prepare the expected response of the mocked http call
+               .ReturnsAsync(new HttpResponseMessage()
+               {
+                   StatusCode = HttpStatusCode.OK,
+                   Content = new StringContent("{\"valuere\":\"Chuck Norris trims his fingernails with a chainsaw.\"}")
+               })
+               .Verifiable();
+
+            var httpClient = new HttpClient(handlerMock.Object);
+            httpClient.BaseAddress = new Uri(_url);
+
+            sut = new ChuckNorrisJokeGen(httpClient);
+
+            var actual = sut.GetRandomJokeAsync(null, null, null).Result;
+
+            Assert.IsNotNull(actual);
+
+            var expectedUri = new Uri($"{_url}/jokes/random?category=animal");
 
             handlerMock.Protected().Verify(
                "SendAsync",

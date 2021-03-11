@@ -10,13 +10,26 @@ namespace ConsoleApp1
     class Program
     {
 
+
+        private const string _jokeUrl = "https://api.chucknorris.io"; 
+        private const string _nameServiceUrl = "https://www.names.privserv.com";
+
+
         static void Main(string[] args)
         {
 
             PrintBanner();
 
-            INameGen nameGenerator = new NamesPrivservNameGen(new HttpClient());
-            IJokeGen jokeGen = new ChuckNorrisJokeGen(new HttpClient());
+            // Interface Setup, in real world application the INameGen and IJokeGen would be bootstraped at startup and injected.
+
+            INameGen nameGenerator = new NamesPrivservNameGen(new HttpClient
+            {
+                BaseAddress = new Uri(_nameServiceUrl)
+            });
+
+            IJokeGen jokeGen = new ChuckNorrisJokeGen(new HttpClient{
+                BaseAddress = new Uri(_jokeUrl)
+            }); ;
 
             while (true)
             {
@@ -52,6 +65,8 @@ namespace ConsoleApp1
 
         }
 
+        // this methods accept an INameGen as a parameter, this is an anti pattern that DI would prevent.
+        // consider this method as a 0 parameter method
         private static Tuple<string, string> GetRandomName(INameGen nameGen)
         {
 
@@ -63,20 +78,22 @@ namespace ConsoleApp1
             }
             else
             {
-                Console.WriteLine($"{result.Item1} {result.Item2} will now be used as the main character of the jokes");
+                Console.WriteLine($"{result.Item1} {result.Item2} will now be used as the main character of the jokes.");
             }
 
             return result;
 
         }
 
+        // this methods accept an INameGen as a parameter, this is an anti pattern that DI would prevent.
+        // consider this method as a 0 parameter method
         private static string GetCategories(IJokeGen jokeGen)
         {
             Console.WriteLine("\nLoading jokes categories...");
             var categories = jokeGen.GetCategoriesAsync().Result;
             if (!categories.Any())
             {
-                Console.WriteLine("Categories did not return any values, the service is downgraded, but you might still be able to generate jokes.");
+                Console.WriteLine($"{nameof(IJokeGen)} did not return any values, the service is downgraded, but you might still be able to generate jokes.");
                 return null;
             }
             else
@@ -97,7 +114,8 @@ namespace ConsoleApp1
 
         }
 
-
+        // this methods accept an INameGen as a parameter, this is an anti pattern that DI would prevent.
+        // consider this method as a 2 parameter method
         private static void GetRandomJokes(IJokeGen jokeGen, string category, Tuple<string, string> names)
         {
 

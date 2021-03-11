@@ -13,9 +13,11 @@ namespace JokeGeneratorTest
     [TestClass]
     public class NamesPrivservNameGenTest
     {
+        private const string _url = "http://example.com";
 
         private NamesPrivservNameGen sut;
 
+        
         [TestMethod]
         public async Task With200ResponseShouldReturnFirstNameLastName()
         {
@@ -38,6 +40,7 @@ namespace JokeGeneratorTest
                .Verifiable();
 
             var httpClient = new HttpClient(handlerMock.Object);
+            httpClient.BaseAddress = new Uri(_url);
 
             sut = new NamesPrivservNameGen(httpClient);
 
@@ -69,12 +72,13 @@ namespace JokeGeneratorTest
                .Verifiable();
 
             var httpClient = new HttpClient(handlerMock.Object);
+            httpClient.BaseAddress = new Uri(_url);
 
             sut = new NamesPrivservNameGen(httpClient);
 
             var result = await sut.GetRandomNameAsync();
 
-            var expectedUri = new Uri("https://www.names.privserv.com/api");
+            var expectedUri = new Uri($"{_url}/api");
 
             handlerMock.Protected().Verify(
                "SendAsync",
@@ -111,6 +115,7 @@ namespace JokeGeneratorTest
                .Verifiable();
 
             var httpClient = new HttpClient(handlerMock.Object);
+            httpClient.BaseAddress = new Uri(_url);
 
             sut = new NamesPrivservNameGen(httpClient);
 
@@ -118,7 +123,7 @@ namespace JokeGeneratorTest
 
             Assert.IsNull(result);
 
-            var expectedUri = new Uri("https://www.names.privserv.com/api");
+            var expectedUri = new Uri($"{_url}/api");
 
             handlerMock.Protected().Verify(
                "SendAsync",
@@ -154,6 +159,7 @@ namespace JokeGeneratorTest
                .Verifiable();
 
             var httpClient = new HttpClient(handlerMock.Object);
+            httpClient.BaseAddress = new Uri(_url);
 
             sut = new NamesPrivservNameGen(httpClient);
 
@@ -161,7 +167,7 @@ namespace JokeGeneratorTest
 
             Assert.IsNull(result);
 
-            var expectedUri = new Uri("https://www.names.privserv.com/api");
+            var expectedUri = new Uri($"{_url}/api");
 
             handlerMock.Protected().Verify(
                "SendAsync",
