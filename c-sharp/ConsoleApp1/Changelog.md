@@ -24,6 +24,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/) and this 
 
 ### Fixed
 
+- fix console stdout encoding
 - fix issue with replace multiple main characters
 - fix integer conversion for number of jokes
 - fix code smell, 3 nested statements down to 2 levels.
