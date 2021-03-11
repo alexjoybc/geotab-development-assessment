@@ -1,5 +1,14 @@
-# README #
+# GeoJokes
 
+A Joke Generator
+## Run
+
+```
+cd c-sharp/ConsoleApp1
+dotnet run
+```
+
+! Enjoy, the app should be self explainatory!
 
 ### Task 1 - Fix some ugly code ###
 
