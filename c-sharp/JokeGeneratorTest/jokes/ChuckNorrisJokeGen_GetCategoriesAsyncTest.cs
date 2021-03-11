@@ -51,6 +51,18 @@ namespace JokeGeneratorTest.jokes
             Assert.AreEqual("c", actual.ElementAt(2));
             Assert.AreEqual("d", actual.ElementAt(3));
 
+            var expectedUri = new Uri("https://api.chucknorris.io/jokes/categories");
+
+            handlerMock.Protected().Verify(
+               "SendAsync",
+               Times.Exactly(1), // we expected a single external request
+               ItExpr.Is<HttpRequestMessage>(req =>
+                  req.Method == HttpMethod.Get  // we expected a GET request
+                  && req.RequestUri == expectedUri // to this uri
+               ),
+               ItExpr.IsAny<CancellationToken>()
+            );
+
         }
 
 
@@ -82,6 +94,18 @@ namespace JokeGeneratorTest.jokes
 
             Assert.AreEqual(0, actual.Count());
 
+            var expectedUri = new Uri("https://api.chucknorris.io/jokes/categories");
+
+            handlerMock.Protected().Verify(
+               "SendAsync",
+               Times.Exactly(1), // we expected a single external request
+               ItExpr.Is<HttpRequestMessage>(req =>
+                  req.Method == HttpMethod.Get  // we expected a GET request
+                  && req.RequestUri == expectedUri // to this uri
+               ),
+               ItExpr.IsAny<CancellationToken>()
+            );
+
         }
 
         [TestMethod]
@@ -111,6 +135,18 @@ namespace JokeGeneratorTest.jokes
             IEnumerable<String> actual = await sut.GetCategoriesAsync();
 
             Assert.AreEqual(0, actual.Count());
+
+            var expectedUri = new Uri("https://api.chucknorris.io/jokes/categories");
+
+            handlerMock.Protected().Verify(
+               "SendAsync",
+               Times.Exactly(1), // we expected a single external request
+               ItExpr.Is<HttpRequestMessage>(req =>
+                  req.Method == HttpMethod.Get  // we expected a GET request
+                  && req.RequestUri == expectedUri // to this uri
+               ),
+               ItExpr.IsAny<CancellationToken>()
+            );
 
         }
 

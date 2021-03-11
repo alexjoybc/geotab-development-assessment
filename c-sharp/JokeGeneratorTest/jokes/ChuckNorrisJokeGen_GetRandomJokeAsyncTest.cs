@@ -59,6 +59,60 @@ namespace JokeGeneratorTest.jokes
 
             Assert.AreEqual(expected, actual);
 
+            var expectedUri = new Uri("https://api.chucknorris.io/jokes/random");
+
+            handlerMock.Protected().Verify(
+               "SendAsync",
+               Times.Exactly(1), // we expected a single external request
+               ItExpr.Is<HttpRequestMessage>(req =>
+                  req.Method == HttpMethod.Get  // we expected a GET request
+                  && req.RequestUri == expectedUri // to this uri
+               ),
+               ItExpr.IsAny<CancellationToken>()
+            );
+
+        }
+
+        [TestMethod]
+        public void withCategoryShouldReturnAJoke()
+        {
+            var handlerMock = new Mock<HttpMessageHandler>(MockBehavior.Strict);
+            handlerMock
+               .Protected()
+               // Setup the PROTECTED method to mock
+               .Setup<Task<HttpResponseMessage>>(
+                  "SendAsync",
+                  ItExpr.IsAny<HttpRequestMessage>(),
+                  ItExpr.IsAny<CancellationToken>()
+               )
+               // prepare the expected response of the mocked http call
+               .ReturnsAsync(new HttpResponseMessage()
+               {
+                   StatusCode = HttpStatusCode.OK,
+                   Content = new StringContent("{\"value\":\"Chuck Norris trims his fingernails with a chainsaw.\"}")
+               })
+               .Verifiable();
+
+            var httpClient = new HttpClient(handlerMock.Object);
+
+            sut = new ChuckNorrisJokeGen(httpClient);
+
+            var actual = sut.GetRandomJokeAsync(null, null, "animal").Result;
+
+            Assert.AreEqual("Chuck Norris trims his fingernails with a chainsaw.", actual);
+
+            var expectedUri = new Uri("https://api.chucknorris.io/jokes/random?category=animal");
+
+            handlerMock.Protected().Verify(
+               "SendAsync",
+               Times.Exactly(1), // we expected a single external request
+               ItExpr.Is<HttpRequestMessage>(req =>
+                  req.Method == HttpMethod.Get  // we expected a GET request
+                  && req.RequestUri == expectedUri // to this uri
+               ),
+               ItExpr.IsAny<CancellationToken>()
+            );
+
         }
 
 

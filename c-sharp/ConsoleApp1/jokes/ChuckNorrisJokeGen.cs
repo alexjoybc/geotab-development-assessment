@@ -48,15 +48,7 @@ namespace JokeGenerator.jokes
         public async Task<string> GetRandomJokeAsync(string firstname, string lastname, string category)
         {
 
-            string url = "jokes/random";
-            if (category != null)
-            {
-                if (url.Contains('?'))
-                    url += "&";
-                else url += "?";
-                url += "category=";
-                url += category;
-            }
+            string url = string.IsNullOrWhiteSpace(category) ? "jokes/random" : $"jokes/random?category={category}";
 
             string reponse = await _httpClient.GetStringAsync(url);
 
@@ -64,13 +56,13 @@ namespace JokeGenerator.jokes
 
             if (firstname != null && lastname != null)
             {
-                return swapMainCharacter(joke, firstname, lastname);
+                return swapHero(joke, firstname, lastname);
             }
 
             return joke;
         }
 
-        private string swapMainCharacter(string joke, string firstname, string lastname)
+        private string swapHero(string joke, string firstname, string lastname)
         {
             return joke.Replace(_chuck, firstname, StringComparison.OrdinalIgnoreCase).Replace(_norris, lastname, StringComparison.OrdinalIgnoreCase);
         }

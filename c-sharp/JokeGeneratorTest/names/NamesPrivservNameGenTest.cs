@@ -2,6 +2,7 @@ using JokeGenerator.names;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Moq.Protected;
+using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -73,6 +74,18 @@ namespace JokeGeneratorTest
 
             var result = await sut.GetRandomNameAsync();
 
+            var expectedUri = new Uri("https://www.names.privserv.com/api");
+
+            handlerMock.Protected().Verify(
+               "SendAsync",
+               Times.Exactly(1), // we expected a single external request
+               ItExpr.Is<HttpRequestMessage>(req =>
+                  req.Method == HttpMethod.Get  // we expected a GET request
+                  && req.RequestUri == expectedUri // to this uri
+               ),
+               ItExpr.IsAny<CancellationToken>()
+            );
+
             Assert.IsNull(result);
         }
 
@@ -104,6 +117,19 @@ namespace JokeGeneratorTest
             var result = await sut.GetRandomNameAsync();
 
             Assert.IsNull(result);
+
+            var expectedUri = new Uri("https://www.names.privserv.com/api");
+
+            handlerMock.Protected().Verify(
+               "SendAsync",
+               Times.Exactly(1), // we expected a single external request
+               ItExpr.Is<HttpRequestMessage>(req =>
+                  req.Method == HttpMethod.Get  // we expected a GET request
+                  && req.RequestUri == expectedUri // to this uri
+               ),
+               ItExpr.IsAny<CancellationToken>()
+            );
+
         }
 
         [TestMethod]
@@ -134,6 +160,19 @@ namespace JokeGeneratorTest
             var result = await sut.GetRandomNameAsync();
 
             Assert.IsNull(result);
+
+            var expectedUri = new Uri("https://www.names.privserv.com/api");
+
+            handlerMock.Protected().Verify(
+               "SendAsync",
+               Times.Exactly(1), // we expected a single external request
+               ItExpr.Is<HttpRequestMessage>(req =>
+                  req.Method == HttpMethod.Get  // we expected a GET request
+                  && req.RequestUri == expectedUri // to this uri
+               ),
+               ItExpr.IsAny<CancellationToken>()
+            );
+
         }
 
     }
