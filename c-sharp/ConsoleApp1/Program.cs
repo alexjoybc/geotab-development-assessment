@@ -22,7 +22,7 @@ namespace ConsoleApp1
             {
 
                 string category = null;
-                Tuple<string, string> randomNames = null;
+                Tuple<string, string> randomName = null;
 
                 Console.WriteLine("Press any key to get random jokes, x to exit the program");
                 if (Console.ReadKey().KeyChar == 'x') break;
@@ -31,32 +31,20 @@ namespace ConsoleApp1
                 Console.WriteLine("Do you want to use a random name? y/n");
                 if (Console.ReadKey().KeyChar == 'y')
                 {
-                    randomNames = GetRandomName(nameGenerator);
+                    randomName = GetRandomName(nameGenerator);
+                } else {
+                    Console.WriteLine();
                 }
 
-                Console.WriteLine("\nDo you want to specify a category? y/n");
+                Console.WriteLine("Do you want to specify a category? y/n");
                 if (Console.ReadKey().KeyChar == 'y')
                 {
                     category = GetCategories(jokeGen);
+                } else {
+                    Console.WriteLine();
                 }
 
-                int n = 0;
-                bool isValid = false;
-                while (!isValid)
-                {
-                    Console.WriteLine("\nHow many jokes do you want? (1-9), then press Enter");
-                    string value = Console.ReadLine();
-                    if (int.TryParse(value, out n) && n > 0 && n < 10)
-                    {
-                        isValid = true;
-                    }
-                    else
-                    {
-                        Console.WriteLine($"{value} is invalid, it should be a number between 1 and 9.");
-                    }
-                }
-
-                GetRandomJokes(jokeGen, category, n, randomNames);
+                GetRandomJokes(jokeGen, category, randomName);
 
             }
 
@@ -110,14 +98,50 @@ namespace ConsoleApp1
         }
 
 
-        private static void GetRandomJokes(IJokeGen jokeGen, string category, int number, Tuple<String, String> names)
+        private static void GetRandomJokes(IJokeGen jokeGen, string category, Tuple<string, string> names)
         {
-            // To prevent DDOS attacks on joke service ;-)
-            if (number > 9) number = 9;
 
-            for (int i = 0; i < number; i++)
+            int count = 0;
+            bool isValid = false;
+            while (!isValid)
             {
-                Console.WriteLine(jokeGen.GetRandomJokeAsync(names?.Item1, names?.Item2, category).Result);
+                Console.WriteLine("How many jokes do you want? (1-9), then press Enter");
+                string value = Console.ReadLine();
+                if (int.TryParse(value, out count) && count > 0 && count < 10)
+                {
+                    isValid = true;
+                }
+                else
+                {
+                    Console.WriteLine($"{value} is invalid, it should be a number between 1 and 9.");
+                }
+            }
+
+            int maxRetry = 15;
+            int attempt = 0;
+
+            HashSet<string> displayedJokes = new HashSet<string>();
+
+            for (int i = 0; i < count; i++)
+            {
+                var joke = jokeGen.GetRandomJokeAsync(names?.Item1, names?.Item2, category).Result;
+
+                if(displayedJokes.Contains(joke))
+                {
+                    i--;
+                    attempt++;
+                }
+                else
+                {
+                    Console.WriteLine(i + 1 + ": " + joke);
+                    displayedJokes.Add(joke);
+                }
+
+                if(attempt >= maxRetry)
+                {
+                    Console.WriteLine($"GeoJokes AI was not able to find 9 jokes{(category == null ? "." : $" in {category} category")}, please contribute to our source code to build a better GeoJokes");
+                    break;
+                }
             }
 
         }

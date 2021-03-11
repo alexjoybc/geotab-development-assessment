@@ -14,8 +14,10 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 
 ### Added
 
+
 - Abstraction: supports new INameGen, for implementing random name generators.
 - Abstraction: supports new IJokeGen, for implementing joke generators.
+- Validation: duplicate detections on jokes
 - Validation: add validation on number of jokes to generate
 - UX: possibility to exit the application
 - UX: user feedback loop on user exit
