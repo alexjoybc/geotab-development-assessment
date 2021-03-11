@@ -10,14 +10,10 @@ namespace ConsoleApp1
     class Program
     {
 
-        static char key;
-
         static void Main(string[] args)
         {
 
             PrintBanner();
-
-            string category = null;
 
             INameGen nameGenerator = new NamesPrivservNameGen(new HttpClient());
             IJokeGen jokeGen = new ChuckNorrisJokeGen(new HttpClient());
@@ -25,51 +21,86 @@ namespace ConsoleApp1
             while (true)
             {
 
+                string category = null;
                 Tuple<string, string> randomNames = null;
 
-                Console.WriteLine("Press any key to get random jokes");
-                Console.ReadKey();
+                Console.WriteLine("Press any key to get random jokes, x to exit the program");
+                if (Console.ReadKey().KeyChar == 'x') break;
                 Console.SetCursorPosition(0, Console.CursorTop);
 
-                Console.WriteLine("Want to use a random name? y/n");
+                Console.WriteLine("Do you want to use a random name? y/n");
                 if (Console.ReadKey().KeyChar == 'y')
                 {
-                    Console.WriteLine("\nLoading random name...");
-                    randomNames = nameGenerator.GetRandomNameAsync().Result;
+                    randomNames = GetRandomName(nameGenerator);
                 }
 
-                Console.WriteLine("Want to specify a category? y/n");
+                Console.WriteLine("\nDo you want to specify a category? y/n");
                 if (Console.ReadKey().KeyChar == 'y' && PrintCategories(jokeGen))
                 {
-                    Console.WriteLine("Enter a category, then press Enter");
+                    Console.WriteLine("Enter a category name, then press Enter");
                     category = Console.ReadLine();
                 }
 
-                Console.WriteLine("How many jokes do you want? (1-9), then press Enter");
-                int n = Int32.Parse(Console.ReadLine());
-                GetRandomJokes(category, n, randomNames);
+                int n = 0;
+                bool isValid = false;
+                while(!isValid)
+                {
+                    Console.WriteLine("\nHow many jokes do you want? (1-9), then press Enter");
+                    string value = Console.ReadLine();
+                    if (int.TryParse(value, out n) && n > 0 && n < 10)
+                    {
+                        isValid = true;
+                    } else
+                    {
+                        Console.WriteLine($"{value} is invalid, it should be a number between 1 and 9.");
+                    }
+                }
 
-                category = null;
+                GetRandomJokes(category, n, randomNames);
 
             }
 
+            Console.WriteLine("\nThank you for laughing with GeoJokes, we'd love to hear your feedback at https://github.com/Geotab/geotab-development-assessment/issues");
+
         }
 
-        private static Tuple<string, string> getRandomName(INameGen nameGen)
+        private static Tuple<string, string> GetRandomName(INameGen nameGen)
         {
-            var result = nameGen.GetRandomNameAsync().Result;
 
+            Console.WriteLine("\nLoading random name...");
+            var result = nameGen.GetRandomNameAsync().Result;
             if(result == null)
             {
                 Console.WriteLine($"{nameof(nameGen)} did not return any values, the service is downgraded, but you might still be able to generate jokes with the default name.");
+            } else
+            {
+                Console.WriteLine($"{result.Item1} {result.Item2} will now be used as the main character of the jokes");
             }
 
             return result;
 
         }
 
+        private static bool PrintCategories(IJokeGen jokeGen)
+        {
+            Console.WriteLine("\nLoading jokes categories...");
+            var result = jokeGen.GetCategoriesAsync().Result;
+            if (!result.Any())
+            {
+                Console.WriteLine("Categories did not return any values, the service is downgraded, but you might still be able to generate jokes.");
+                return false;
+            }
+            else
+                Console.WriteLine($"{string.Join(", ", result)}");
+
+            return true;
+        }
+
+
         private static void GetRandomJokes(string category, int number, Tuple<String, String> names)
         {
+            // To prevent DDOS attacks on joke service ;-)
+            if (number > 9) number = 9;
 
             JsonFeed jsonFeed = new JsonFeed("https://api.chucknorris.io");
 
@@ -79,21 +110,6 @@ namespace ConsoleApp1
             }
 
         }
-
-        private static bool PrintCategories(IJokeGen jokeGen)
-        {
-            var result = jokeGen.GetCategoriesAsync().Result;
-            if (!result.Any())
-            {
-                Console.WriteLine("\nCategories did not return any values, the service is downgraded, but you might still be able to generate jokes.");
-                return false;
-            }
-            else
-                Console.WriteLine($"\n{string.Join(", ", result)}");
-
-            return true;
-        }
-
 
         private static void PrintBanner()
         {
