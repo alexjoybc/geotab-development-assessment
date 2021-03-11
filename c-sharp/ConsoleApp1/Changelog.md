@@ -16,11 +16,14 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 
 - Abstraction: supports new INameGen, for implementing random name generators.
 - Abstraction: supports new IJokeGen, for implementing joke generators.
+- Validation: add validation on number of jokes to generate
+- UX: possibility to exit the application
+- UX: user feedback loop on user exit
+- UX: new Application Banner
 
 ### Changed
 
 - Improved instructions to start the program.
-- Removed printer class, for builtin Console.Writeline().
 - improved user flow by showing categories when user wants to filter a spcific category
 - changed jsonFeed to not be static
 
@@ -34,3 +37,8 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 - fix bug return only 1 joke
 - fix bug with assigning joke category
 - fix bug retrieving categories
+
+### Removed
+
+- removed json Feed
+- removed Console Printer, for builtin Console.Writeline().
