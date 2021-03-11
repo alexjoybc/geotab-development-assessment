@@ -1,16 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog][Keep a Changelog] and this project adheres to [Semantic Versioning][Semantic Versioning].
+The format is based on [Keep a Changelog](https://keepachangelog.com/) and this project adheres to [Semantic Versioning][Semantic Versioning].
 
-## [Unreleased]
-
-
----
-
-## [Released]
-
----
+## [1.1.0] - 2021-03-12
 
 ### Added
 
