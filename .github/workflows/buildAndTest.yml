@@ -7,8 +7,8 @@ jobs:
     runs-on: ubuntu-latest
     # use release mode for all steps
     env:
-      config: 'Release'
-      dotnet-directory: ./c-sharp
+      DOTNET_CONFIG: 'Release'
+      DOTNET_DIR: ./c-sharp
 
     steps:
     - name: clone repo
@@ -21,10 +21,13 @@ jobs:
 
       # restore dependencies  
     - name: Install dependencies
-      working-directory: ${{ env.dotnet-directory }}
+      working-directory: ${{ env.DOTNET_DIR }}
       run: dotnet restore
 
       # build project
     - name: Build
-      working-directory: ${{ env.dotnet-directory }}
-      run: dotnet build --configuration $config --no-restore
+      working-directory: ${{ env.DOTNET_DIR }}
+      run: dotnet build --configuration $DOTNET_CONFIG --no-restore
+
+    - name: Test     
+      run: dotnet test --no-restore --no-build --configuration $DOTNET_CONFIG
