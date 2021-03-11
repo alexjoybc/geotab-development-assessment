@@ -1,0 +1,30 @@
+name: buildAndTest
+on: push
+
+jobs:
+  build:
+    # use ubuntu for more build minutes
+    runs-on: ubuntu-latest
+    # use release mode for all steps
+    env:
+      config: 'Release'
+      dotnet-directory: ./c-sharp
+
+    steps:
+    - name: clone repo
+    - uses: actions/checkout@v2
+
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 2.1.814
+
+      # restore dependencies  
+    - name: Install dependencies
+      working-directory: {{ env.dotnet-directory }}
+      run: dotnet restore
+
+      # build project
+    - name: Build
+      working-directory: {{ env.dotnet-directory }}
+      run: dotnet build --configuration $config --no-restore
