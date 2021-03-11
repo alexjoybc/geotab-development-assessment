@@ -1,5 +1,14 @@
-# README #
+# GeoJokes
 
+A Joke Generator
+## Run
+
+```
+cd c-sharp/ConsoleApp1
+dotnet run
+```
+
+! Enjoy, the app should be self explainatory!
 
 ### Task 1 - Fix some ugly code ###
 
@@ -12,6 +21,8 @@ Your task as a professional developer is to clean up this app and make it someth
 ### Task 2 - Write a report ###
 
 Write a document explaining some of the improvements you made to the code, and why you did so.
+
+Everything is included in the PR Description, ChangeLog and Commit history.
 
 ### What do I need? ###
 
