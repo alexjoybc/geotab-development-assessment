@@ -22,6 +22,8 @@ Your task as a professional developer is to clean up this app and make it someth
 
 Write a document explaining some of the improvements you made to the code, and why you did so.
 
+Everything is included in the PR Description, ChangeLog and Commit history.
+
 ### What do I need? ###
 
 * [.NET Core](https://www.microsoft.com/net/core) - any platform
