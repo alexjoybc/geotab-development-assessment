@@ -43,12 +43,7 @@ namespace JokeGenerator.names
             {
                 Console.WriteLine($"Error converting response to firstName,lastName tuple.");
                 return null;
-            } catch (Exception esx)
-            {
-                Console.WriteLine(esx);
-                return null;
             }
-            
 
         }
     }
