@@ -27,6 +27,8 @@ namespace ConsoleApp1
         static void Main(string[] args)
         {
 
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
+
             // Interface Setup, in real world application the INameGen and IJokeGen would be bootstraped at startup and injected.
             INameGen nameGenerator = new NamesPrivservNameGen(new HttpClient
             {
@@ -57,7 +59,7 @@ namespace ConsoleApp1
                     Console.WriteLine();
                 }
 
-                Console.WriteLine("Do you want to specify a category? y/n");
+                Console.WriteLine("Do you want to specify a joke category? y/n");
                 if (Console.ReadKey().KeyChar == 'y')
                 {
                     category = GetCategories(jokeGen);
@@ -83,11 +85,12 @@ namespace ConsoleApp1
             if (result == null)
             {
                 Console.WriteLine($"{nameof(nameGen)} did not return any values, the service is downgraded, but you might still be able to generate jokes with the default name.");
-            }
-            else
+            } else
             {
                 Console.WriteLine($"{result.Item1} {result.Item2} will now be used as the main character of the jokes.");
             }
+
+           
 
             return result;
 

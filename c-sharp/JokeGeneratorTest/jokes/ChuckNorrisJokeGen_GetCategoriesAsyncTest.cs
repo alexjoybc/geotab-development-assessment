@@ -76,13 +76,11 @@ namespace JokeGeneratorTest.jokes
             var handlerMock = new Mock<HttpMessageHandler>(MockBehavior.Strict);
             handlerMock
                .Protected()
-               // Setup the PROTECTED method to mock
                .Setup<Task<HttpResponseMessage>>(
                   "SendAsync",
                   ItExpr.IsAny<HttpRequestMessage>(),
                   ItExpr.IsAny<CancellationToken>()
                )
-               // prepare the expected response of the mocked http call
                .ReturnsAsync(new HttpResponseMessage()
                {
                    StatusCode = HttpStatusCode.BadRequest,
@@ -103,10 +101,10 @@ namespace JokeGeneratorTest.jokes
 
             handlerMock.Protected().Verify(
                "SendAsync",
-               Times.Exactly(1), // we expected a single external request
+               Times.Exactly(1),
                ItExpr.Is<HttpRequestMessage>(req =>
-                  req.Method == HttpMethod.Get  // we expected a GET request
-                  && req.RequestUri == expectedUri // to this uri
+                  req.Method == HttpMethod.Get
+                  && req.RequestUri == expectedUri
                ),
                ItExpr.IsAny<CancellationToken>()
             );

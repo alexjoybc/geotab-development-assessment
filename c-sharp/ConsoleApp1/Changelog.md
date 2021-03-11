@@ -7,7 +7,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/) and this 
 
 ### Added
 
-
 - Abstraction: supports new INameGen, for implementing random name generators.
 - Abstraction: supports new IJokeGen, for implementing joke generators.
 - Validation: duplicate detections on jokes
@@ -15,12 +14,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/) and this 
 - UX: possibility to exit the application
 - UX: user feedback loop on user exit
 - UX: new Application Banner
+- CI: adding unit test and build on PR and merge to master
 
 ### Changed
 
 - Improved instructions to start the program.
 - improved user flow by showing categories when user wants to filter a spcific category
-- changed jsonFeed to not be static
+- Changed jsonFeed to not be static
 
 ### Fixed
 
