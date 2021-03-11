@@ -27,8 +27,6 @@ namespace ConsoleApp1
         static void Main(string[] args)
         {
 
-            PrintBanner();
-
             // Interface Setup, in real world application the INameGen and IJokeGen would be bootstraped at startup and injected.
             INameGen nameGenerator = new NamesPrivservNameGen(new HttpClient
             {
@@ -38,6 +36,8 @@ namespace ConsoleApp1
             IJokeGen jokeGen = new ChuckNorrisJokeGen(new HttpClient{
                 BaseAddress = new Uri(_jokeUrl)
             }); ;
+
+            PrintBanner();
 
             while (true)
             {
