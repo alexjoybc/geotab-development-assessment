@@ -145,16 +145,16 @@ namespace JokeGeneratorTest.jokes
 
             var actual = sut.GetRandomJokeAsync(null, null, null).Result;
 
-            Assert.IsNotNull(actual);
+            Assert.IsNull(actual);
 
-            var expectedUri = new Uri($"{_url}/jokes/random?category=animal");
+            var expectedUri = new Uri($"{_url}/jokes/random");
 
             handlerMock.Protected().Verify(
                "SendAsync",
-               Times.Exactly(1), // we expected a single external request
+               Times.Exactly(1),
                ItExpr.Is<HttpRequestMessage>(req =>
-                  req.Method == HttpMethod.Get  // we expected a GET request
-                  && req.RequestUri == expectedUri // to this uri
+                  req.Method == HttpMethod.Get
+                  && req.RequestUri == expectedUri
                ),
                ItExpr.IsAny<CancellationToken>()
             );

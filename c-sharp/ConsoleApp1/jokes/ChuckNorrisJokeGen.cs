@@ -49,6 +49,20 @@ namespace JokeGenerator.jokes
 
         }
 
+        /// <summary>
+        /// Returns a chuck norris joke, see https://api.chucknorris.io/jokes/random
+        /// 
+        /// Usage notes:
+        /// 
+        /// if you provide a firstname and a lastname then it will swap the chuck with this new hero
+        /// if you provide a category it will filter jokes
+        /// you can use the category api to retrieve the list of available api. invalid categories will mostly return a 404 and cause a null value.
+        /// 
+        /// </summary>
+        /// <param name="firstname">A new hero first name</param>
+        /// <param name="lastname">A new hero last name</param>
+        /// <param name="category">A category filter</param>
+        /// <returns></returns>
         public async Task<string> GetRandomJokeAsync(string firstname, string lastname, string category)
         {
 
@@ -76,7 +90,7 @@ namespace JokeGenerator.jokes
                 Console.WriteLine($"Error converting response to joke.");
                 return null;
             } catch (RuntimeBinderException) {
-                Console.WriteLine($"Error converting response to firstName,lastName tuple.");
+                Console.WriteLine($"Error converting response to joke.");
                 return null;
             }
 }

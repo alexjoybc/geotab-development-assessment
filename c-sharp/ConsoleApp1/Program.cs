@@ -7,13 +7,22 @@ using System.Linq;
 
 namespace ConsoleApp1
 {
+    /// <summary>
+    /// This program print jokes.
+    /// 
+    /// The following 200 lines of code are not unit tested and there is a good reason for it.
+    /// The control flow bellow could be considered as presentation logic, and the logic depends on console input.
+    /// The program has also mulitiple responsabilities that makes it hard to unit test.
+    /// If we wanted to have more unit tests, we would have to create wrapper around the few methods that have logic.
+    /// On the other end, ChuckNorrisJokeGen and NamesPrivservNameGen can be easely tested
+    /// as they're responsibility is clearly define and their definition is abstracted in the corresponding interfaces
+    /// 
+    /// </summary>
     class Program
     {
 
-
         private const string _jokeUrl = "https://api.chucknorris.io"; 
         private const string _nameServiceUrl = "https://www.names.privserv.com";
-
 
         static void Main(string[] args)
         {
@@ -21,7 +30,6 @@ namespace ConsoleApp1
             PrintBanner();
 
             // Interface Setup, in real world application the INameGen and IJokeGen would be bootstraped at startup and injected.
-
             INameGen nameGenerator = new NamesPrivservNameGen(new HttpClient
             {
                 BaseAddress = new Uri(_nameServiceUrl)
@@ -97,8 +105,9 @@ namespace ConsoleApp1
                 return null;
             }
             else
+            {
                 Console.WriteLine($"{string.Join(", ", categories)}");
-
+            }
 
             Console.WriteLine("Enter a category name, then press Enter");
             var result = Console.ReadLine().ToLower();
@@ -143,6 +152,12 @@ namespace ConsoleApp1
             for (int i = 0; i < count; i++)
             {
                 var joke = jokeGen.GetRandomJokeAsync(names?.Item1, names?.Item2, category).Result;
+
+                if(string.IsNullOrWhiteSpace(joke))
+                {
+                    Console.WriteLine("Oh no, Oh no, Oh no no no no no! The JokeGenerator is broken!");
+                    return;
+                }
 
                 if(displayedJokes.Contains(joke))
                 {
