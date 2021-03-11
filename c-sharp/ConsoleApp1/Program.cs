@@ -172,7 +172,7 @@ namespace ConsoleApp1
 
                 if(attempt >= maxRetry)
                 {
-                    Console.WriteLine($"GeoJokes AI was not able to find 9 jokes{(category == null ? "." : $" in {category} category")}, please contribute to our source code to build a better GeoJokes");
+                    Console.WriteLine($"GeoJokes AI was not able to find {count} jokes{(category == null ? "." : $" in {category} category")}, please contribute to our source code to build a better GeoJokes");
                     break;
                 }
             }
