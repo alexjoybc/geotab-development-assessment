@@ -12,7 +12,7 @@ jobs:
 
     steps:
     - name: clone repo
-    - uses: actions/checkout@v2
+      uses: actions/checkout@v2
 
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
@@ -21,10 +21,10 @@ jobs:
 
       # restore dependencies  
     - name: Install dependencies
-      working-directory: {{ env.dotnet-directory }}
+      working-directory: ${{ env.dotnet-directory }}
       run: dotnet restore
 
       # build project
     - name: Build
-      working-directory: {{ env.dotnet-directory }}
+      working-directory: ${{ env.dotnet-directory }}
       run: dotnet build --configuration $config --no-restore
