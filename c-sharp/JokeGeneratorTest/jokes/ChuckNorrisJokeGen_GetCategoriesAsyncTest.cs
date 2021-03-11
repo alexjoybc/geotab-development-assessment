@@ -46,7 +46,7 @@ namespace JokeGeneratorTest.jokes
 
             sut = new ChuckNorrisJokeGen(httpClient);
 
-            IEnumerable<String> actual = await sut.GetCategoriesAsync();
+            IEnumerable<string> actual = await sut.GetCategoriesAsync();
 
             Assert.AreEqual(4, actual.Count());
 
@@ -95,7 +95,7 @@ namespace JokeGeneratorTest.jokes
 
             sut = new ChuckNorrisJokeGen(httpClient);
 
-            IEnumerable<String> actual = await sut.GetCategoriesAsync();
+            IEnumerable<string> actual = await sut.GetCategoriesAsync();
 
             Assert.AreEqual(0, actual.Count());
 
@@ -138,7 +138,7 @@ namespace JokeGeneratorTest.jokes
 
             sut = new ChuckNorrisJokeGen(httpClient);
 
-            IEnumerable<String> actual = await sut.GetCategoriesAsync();
+            IEnumerable<string> actual = await sut.GetCategoriesAsync();
 
             Assert.AreEqual(0, actual.Count());
 

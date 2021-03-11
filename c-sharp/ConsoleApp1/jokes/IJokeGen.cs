@@ -15,7 +15,7 @@ namespace JokeGenerator.jokes
         /// When implementing this service it is recomended to return an empty list on known error and print a message.
         /// </summary>
         /// <returns>A List of string</returns>
-        Task<IEnumerable<String>> GetCategoriesAsync();
+        Task<IEnumerable<string>> GetCategoriesAsync();
 
         /// <summary>
         /// Returns a random joke, if firstname and lastname is provided, the main character must be switched, an optional filter category can be provided
