@@ -76,5 +76,65 @@ namespace JokeGeneratorTest
             Assert.IsNull(result);
         }
 
+        [TestMethod]
+        public async Task With200ResponseAndInvalidJsonShouldReturnNull()
+        {
+
+            var handlerMock = new Mock<HttpMessageHandler>(MockBehavior.Strict);
+            handlerMock
+               .Protected()
+               // Setup the PROTECTED method to mock
+               .Setup<Task<HttpResponseMessage>>(
+                  "SendAsync",
+                  ItExpr.IsAny<HttpRequestMessage>(),
+                  ItExpr.IsAny<CancellationToken>()
+               )
+               // prepare the expected response of the mocked http call
+               .ReturnsAsync(new HttpResponseMessage()
+               {
+                   StatusCode = HttpStatusCode.OK,
+                   Content = new StringContent("test"),
+               })
+               .Verifiable();
+
+            var httpClient = new HttpClient(handlerMock.Object);
+
+            sut = new NamesPrivservNameGen(httpClient);
+
+            var result = await sut.GetRandomNameAsync();
+
+            Assert.IsNull(result);
+        }
+
+        [TestMethod]
+        public async Task With200ResponseAndNoNamInJsonShouldReturnNull()
+        {
+
+            var handlerMock = new Mock<HttpMessageHandler>(MockBehavior.Strict);
+            handlerMock
+               .Protected()
+               // Setup the PROTECTED method to mock
+               .Setup<Task<HttpResponseMessage>>(
+                  "SendAsync",
+                  ItExpr.IsAny<HttpRequestMessage>(),
+                  ItExpr.IsAny<CancellationToken>()
+               )
+               // prepare the expected response of the mocked http call
+               .ReturnsAsync(new HttpResponseMessage()
+               {
+                   StatusCode = HttpStatusCode.OK,
+                   Content = new StringContent(@"{'gender':'male'}"),
+               })
+               .Verifiable();
+
+            var httpClient = new HttpClient(handlerMock.Object);
+
+            sut = new NamesPrivservNameGen(httpClient);
+
+            var result = await sut.GetRandomNameAsync();
+
+            Assert.IsNull(result);
+        }
+
     }
 }

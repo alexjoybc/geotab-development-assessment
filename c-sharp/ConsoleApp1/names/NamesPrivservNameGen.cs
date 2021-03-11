@@ -37,7 +37,15 @@ namespace JokeGenerator.names
                 return  Tuple.Create(dynamicJson.name.ToString(), dynamicJson.surname.ToString());
             } catch (HttpRequestException ex)
             {
-                Console.WriteLine(ex);
+                Console.WriteLine($"Error fetching categories from {_httpClient.BaseAddress}: {ex.Message}.");
+                return null;
+            } catch (JsonReaderException)
+            {
+                Console.WriteLine($"Error converting response to firstName,lastName tuple.");
+                return null;
+            } catch (Exception esx)
+            {
+                Console.WriteLine(esx);
                 return null;
             }
             
